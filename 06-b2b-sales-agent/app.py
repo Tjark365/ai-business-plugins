@@ -1,34 +1,9 @@
-"""B2B Sales Agent: compact, deterministic core with optional live search."""
-import os,re,json,sys
-from dataclasses import dataclass,asdict
-from typing import Any
-
-@dataclass
-class Result:
-    title:str
-    summary:str
-    score:int
-    confidence:str="medium"
-    source:str=""
-
-def _score(text:str, terms:list[str])->int:
-    t=text.lower()
-    hits=sum(1 for x in terms if x.lower() in t)
-    return min(100, hits*18)
-
-def analyze(request:dict[str,Any], pro:bool=False)->dict[str,Any]:
-    if not pro:
-        return {"mode":"free","message":"Pro workflow requires host entitlement.","preview":_preview(request)}
-    return {"mode":"pro","results":_results(request)}
-
-def _preview(r):
-    return [{"title":"Preview","summary":"Define the target, constraints and evidence needed for a full run.","score":50,"confidence":"low","source":""}]
-
-def _results(r):
-    text=json.dumps(r,ensure_ascii=False)
-    terms=[x for x in re.findall(r"[A-Za-zÄÖÜäöüß0-9-]{4,}",text) if x.lower() not in {"the","with","from","this","that"}][:20]
-    return [asdict(Result(title="B2B Sales Agent",summary="Build qualification, objection handling and measurable B2B sales playbooks.",score=max(35,_score(text,terms[:6])),confidence="medium",source="User-supplied inputs"))]
-
-if __name__=="__main__":
-    req=json.loads(sys.stdin.read() or "{}")
-    print(json.dumps(analyze(req,pro=os.getenv("PRO")=="1"),ensure_ascii=False,indent=2))
+import json,sys
+NAME="B2B Sales Agent"
+def run(r,pro=False):
+ if not isinstance(r,dict): raise ValueError("request must be an object")
+ if not pro:return {"mode":"free","tool":NAME,"preview":{"message":"Enter offer, ICP, sales cycle and common objections for a measurable playbook."},"pro_required":True}
+ offer=r.get("offer",""); icp=r.get("icp",""); objections=r.get("objections",[])
+ stages=[{"stage":"Qualification","goal":"Confirm problem, authority, budget and timing","metric":"qualified rate"},{"stage":"Discovery","goal":"Quantify impact and current process","metric":"discovery-to-proposal"},{"stage":"Proposal","goal":"Tie scope to measurable ROI","metric":"proposal-to-close"},{"stage":"Close","goal":"Resolve risk and agree next step","metric":"win rate"}]
+ return {"mode":"pro","tool":NAME,"result":{"offer":offer,"icp":icp,"objection_handling":[{"objection":x,"response_framework":"Acknowledge → clarify → evidence → next step"} for x in objections],"stages":stages,"next_actions":["Define qualification thresholds","Track stage conversion","Use evidence-backed ROI claims only"]}}
+if __name__=="__main__": print(json.dumps(run(json.loads(sys.stdin.read() or "{}"),True),ensure_ascii=False))
