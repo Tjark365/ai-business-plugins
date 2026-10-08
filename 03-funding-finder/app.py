@@ -1,9 +1,15 @@
 import json,sys
 NAME="Funding Finder"
-DESC="Match projects to current non-repayable grants using official sources and explicit eligibility checks."
-def run(request,pro=False):
- if not isinstance(request,dict): raise ValueError("request must be an object")
- if not pro: return {"mode":"free","tool":NAME,"preview":{"summary":DESC,"score":50},"pro_required":True}
- t=json.dumps(request,ensure_ascii=False).lower(); sig=("budget","deadline","procurement","contract","authority","requirement","grant","funding","innovation","research","investment","sme","eligibility")
- return {"mode":"pro","tool":NAME,"result":{"summary":DESC,"score":min(100,35+5*sum(x in t for x in sig)),"verified_facts":[],"inferences":["Preliminary fit score; current primary-source evidence must be validated."],"sources":[],"next_actions":["Collect primary-source evidence","Check eligibility and deadline","Rank by fit, evidence and timing"]}}
+def run(r,pro=False):
+ if not isinstance(r,dict): raise ValueError("request must be an object")
+ if not pro:return {"mode":"free","tool":NAME,"preview":{"message":"Enter project, location, applicant type, investment and funding need."},"pro_required":True}
+ programs=r.get("programs",[])
+ if not isinstance(programs,list): raise ValueError("programs must be a list")
+ out=[]
+ for p in programs:
+  if not isinstance(p,dict): continue
+  score=sum([30 if p.get("eligibility") else 0,25 if p.get("project_fit") else 0,20 if p.get("funding_rate") else 0,15 if p.get("timing") else 0,10 if p.get("official_source") else 0])
+  out.append({"program":p.get("name","Unknown"),"score":score,"funding_rate":p.get("funding_rate"),"deadline":p.get("deadline"),"source":p.get("source")})
+ out.sort(key=lambda x:x["score"],reverse=True)
+ return {"mode":"pro","tool":NAME,"result":{"ranking":out,"method":"Eligibility 30 / project fit 25 / funding rate 20 / timing 15 / official source 10","next_actions":["Verify current call on the official programme page","Check state aid and applicant eligibility","Reconcile eligible costs with the call"]}}
 if __name__=="__main__": print(json.dumps(run(json.loads(sys.stdin.read() or "{}"),True),ensure_ascii=False))
