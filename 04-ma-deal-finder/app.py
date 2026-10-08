@@ -1,12 +1,15 @@
-"""04-ma-deal-finder structured plugin core."""
 import json,sys
-NAME="04-ma-deal-finder"; DESC="Screen current acquisition and sale opportunities using explicit deal criteria and public evidence."
-def run(request,pro=False):
-    if not isinstance(request,dict): raise ValueError("request must be an object")
-    if len(json.dumps(request,ensure_ascii=False))>50000: raise ValueError("request too large")
-    if not pro: return {"mode":"free","tool":NAME,"preview":{"summary":DESC,"score":50,"confidence":"low"},"pro_required":True}
-    t=json.dumps(request,ensure_ascii=False).lower()
-    signals=("budget","deadline","funding","growth","hiring","expansion","procurement","investment","acquisition","risk","revenue","cost")
-    score=min(100,35+4*sum(s in t for s in signals))
-    return {"mode":"pro","tool":NAME,"result":{"summary":DESC,"score":score,"confidence":"medium","verified_facts":[],"inferences":["Preliminary score; external evidence must be validated before decisions."],"sources":[],"assumptions":list(request),"next_actions":["Collect primary-source evidence","Validate key assumptions","Rank by fit, evidence and timing"]}}
-if __name__=="__main__": print(json.dumps(run(json.loads(sys.stdin.read() or "{}"),True),ensure_ascii=False,indent=2))
+NAME="M&A Deal Finder"
+def run(r,pro=False):
+ if not isinstance(r,dict): raise ValueError("request must be an object")
+ if not pro:return {"mode":"free","tool":NAME,"preview":{"message":"Enter target industry, geography, size, deal type and strategic rationale."},"pro_required":True}
+ deals=r.get("deals",[])
+ if not isinstance(deals,list): raise ValueError("deals must be a list")
+ out=[]
+ for d in deals:
+  if not isinstance(d,dict): continue
+  score=sum([25 if d.get("industry_fit") else 0,20 if d.get("size_fit") else 0,20 if d.get("geography_fit") else 0,20 if d.get("strategic_fit") else 0,15 if d.get("evidence") else 0])
+  out.append({"target":d.get("target","Unknown"),"score":score,"deal_type":d.get("deal_type"),"source":d.get("source"),"status":d.get("status")})
+ out.sort(key=lambda x:x["score"],reverse=True)
+ return {"mode":"pro","tool":NAME,"result":{"ranking":out,"method":"Industry 25 / size 20 / geography 20 / strategic fit 20 / evidence 15","next_actions":["Verify transaction status","Check ownership and financial evidence","Prepare valuation and outreach rationale"]}}
+if __name__=="__main__": print(json.dumps(run(json.loads(sys.stdin.read() or "{}"),True),ensure_ascii=False))
