@@ -10,8 +10,8 @@ jobs:
       matrix:
         plugin:
           - 01-b2b-lead-finder
-          - 02-ausschreibungs-finder
-          - 03-foerdermittel-finder
+          - 02-tender-finder
+          - 03-funding-finder
           - 04-ma-deal-finder
           - 05-due-diligence-analyzer
           - 06-b2b-sales-agent
