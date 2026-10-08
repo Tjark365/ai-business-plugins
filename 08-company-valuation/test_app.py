@@ -1,11 +1,8 @@
 import unittest
 from app import run
 class TestPlugin(unittest.TestCase):
-    def test_free_gate(self):
-        self.assertEqual(run({})["mode"],"free")
-        self.assertTrue(run({})["pro_required"])
-    def test_pro(self):
-        x=run({"goal":"test"},True)
-        self.assertEqual(x["mode"],"pro")
-        self.assertIn("result",x)
+ def test_free_gate(self):
+  r=run({},False); self.assertEqual(r["mode"],"free"); self.assertTrue(r["pro_required"])
+ def test_pro(self):
+  r=run({},True); self.assertEqual(r["mode"],"pro"); self.assertIn("result",r)
 if __name__=="__main__": unittest.main()
