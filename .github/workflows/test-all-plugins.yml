@@ -1,0 +1,39 @@
+name: test-all-plugins
+on:
+  push:
+  pull_request:
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin:
+          - 01-b2b-lead-finder
+          - 02-ausschreibungs-finder
+          - 03-foerdermittel-finder
+          - 04-ma-deal-finder
+          - 05-due-diligence-analyzer
+          - 06-b2b-sales-agent
+          - 07-sales-opportunity-finder
+          - 08-company-valuation
+          - 09-cashflow-optimizer
+          - 10-saas-cost-optimizer
+          - 11-financing-checker
+          - 12-procurement-comparer
+          - 13-investor-matcher
+          - 14-grant-application-checker
+          - 15-real-estate-deal-analyzer
+          - 16-competitive-intelligence
+          - 17-b2b-outreach-agent
+          - 18-price-optimizer
+          - 19-seo-opportunity-finder
+          - 20-unity-game-generator
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run plugin tests
+        working-directory: ${{ matrix.plugin }}
+        run: python -m unittest discover -p 'test_*.py' -v
