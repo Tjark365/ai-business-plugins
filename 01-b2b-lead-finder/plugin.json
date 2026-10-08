@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "01-b2b-lead-finder",
+  "version": "0.1.0",
+  "description": "B2B Lead Finder plugin",
+  "author": {
+    "name": "Tjark365"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "B2B Lead Finder",
+        "shortDescription": "B2B Lead Finder",
+        "longDescription": "Structured workflow with Free preview and Pro workflow.",
+        "developerName": "Tjark365",
+        "category": "Business",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": [
+          "Help me use this workflow.",
+          "Run a preview.",
+          "Review my inputs and next steps."
+        ]
+      }
+    }
+  }
+}
