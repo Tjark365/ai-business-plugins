@@ -1,0 +1,10 @@
+{
+  "offer": "AI customer-support automation",
+  "icp": "B2B SaaS companies with 50-500 employees",
+  "geography": "Germany",
+  "industry": "B2B SaaS",
+  "company_size": "50-500 employees",
+  "exclusions": ["job board"],
+  "lead_count": 10,
+  "pro": false
+}
