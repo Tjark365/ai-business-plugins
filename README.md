@@ -1,37 +1,41 @@
-# AI Business Plugins
+# B2B Lead Finder
 
-20 business-focused plugins in one repository.
+Find high-value B2B prospects using current public information.
 
-| # | Plugin | Target Pro |
-|---|---|---:|
-| 1 | B2B Lead Finder | €49/mo |
-| 2 | Ausschreibungs Finder | €79/mo |
-| 3 | Fördermittel Finder | €59/mo |
-| 4 | M&A Deal Finder | €199/mo |
-| 5 | Due-Diligence Analyzer | €149/mo |
-| 6 | B2B Sales Agent | €49/mo |
-| 7 | Sales Opportunity Finder | €69/mo |
-| 8 | Company Valuation | €49/mo |
-| 9 | Cashflow Optimizer | €79/mo |
-| 10 | SaaS Cost Optimizer | €39/mo |
-| 11 | Financing Checker | €59/mo |
-| 12 | Procurement Comparer | €79/mo |
-| 13 | Investor Matcher | €99/mo |
-| 14 | Förderantrag Checker | €69/mo |
-| 15 | Immobilien Deal Analyzer | €59/mo |
-| 16 | Competitive Intelligence | €79/mo |
-| 17 | B2B Outreach Agent | €39/mo |
-| 18 | Price Optimizer | €49/mo |
-| 19 | SEO Opportunity Finder | €39/mo |
-| 20 | Unity Game Generator | €29/mo |
+## Repository implementation
 
-## Product model
-- Free = limited preview.
-- Pro = complete workflow after host entitlement.
-- No fabricated facts, contacts, buying intent or private data.
-- Current claims must be backed by sources.
+- `lead_finder.py` — core ranking, scoring and Free/Pro output logic.
+- `plugin-spec.md` — product contract and required behavior.
+- `test_lead_finder.py` — unit tests.
 
-## Important
-GitHub stores and versions the source. GitHub Actions can run automated tests, but GitHub itself is not a persistent API runtime. A production cloud/plugin host is still required for live server execution.
+## Free
+- Preview mode
+- Maximum 3 leads
+- Lightweight fields only
 
-OpenAI/ChatGPT publishing and payment setup are intentionally kept separate from this code repository.
+## Pro
+- Full ranked research output
+- Buying signals
+- Ability-to-pay assessment
+- Evidence and source tracking
+- Next actions
+- Score from 0–100
+
+Target price: €49/month.
+
+### Score
+
+| Factor | Weight |
+|---|---:|
+| ICP fit | 30 |
+| Buying signal | 25 |
+| Ability to pay | 15 |
+| Problem/offer fit | 15 |
+| Timing | 10 |
+| Evidence | 5 |
+
+### Important
+
+This module does not perform web search by itself. The host must inject a search provider that returns current, sourced evidence.
+
+Never invent contacts, buying intent, revenue, or private personal data.
