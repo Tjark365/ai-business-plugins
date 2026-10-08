@@ -1,15 +1,9 @@
-"""Unity Game Generator — production-ready core.
-Generate a Unity game concept, scene plan, scripts and build checklist from a prompt.
-Free returns a preview; Pro returns the full structured workflow when host entitlement is supplied."""
-import json,sys,re
-
-def run(request,pro=False):
-    if not pro:
-        return {"mode":"free","preview":[{"title":"Unity Game Generator","summary":"Generate a Unity game concept, scene plan, scripts and build checklist from a prompt.","score":50,"confidence":"low"}],"pro_required":True}
-    text=json.dumps(request,ensure_ascii=False)
-    terms=re.findall(r"[A-Za-zÄÖÜäöüß0-9-]{4,}",text)
-    score=min(100,40+len(set(x.lower() for x in terms[:20]))*3)
-    return {"mode":"pro","tool":"Unity Game Generator","result":{"summary":"Generate a Unity game concept, scene plan, scripts and build checklist from a prompt.","score":score,"assumptions":list(request.keys()),"verified_facts":[],"inferences":[],"sources":[]}}
-if __name__=="__main__":
-    req=json.loads(sys.stdin.read() or "{}")
-    print(json.dumps(run(req,pro=True),ensure_ascii=False,indent=2))
+import json,sys
+NAME="Unity Game Generator"
+def run(r,pro=False):
+    if not isinstance(r,dict): raise ValueError("request must be an object")
+    if not pro:return {"mode":"free","tool":NAME,"preview":{"message":"Describe the game genre, core loop, platform and visual style."},"pro_required":True}
+    idea=str(r.get("idea","")).strip() or "Arcade prototype"
+    genre=r.get("genre","unspecified"); platform=r.get("platform","PC")
+    return {"mode":"pro","tool":NAME,"result":{"game_concept":{"title":r.get("title","Generated Prototype"),"genre":genre,"platform":platform,"core_loop":idea},"scene_plan":[{"scene":"Bootstrap","purpose":"Initialize systems"},{"scene":"MainMenu","purpose":"Start/options"},{"scene":"Game","purpose":"Core gameplay"},{"scene":"Results","purpose":"Score/progression"}],"scripts":["GameManager.cs","PlayerController.cs","UIManager.cs","SaveSystem.cs"],"build_checklist":["Create Unity project","Add scenes in Build Settings","Implement input and gameplay loop","Add error handling and save/load","Test target platform build"],"note":"Generated code should be reviewed and tested inside the target Unity version."}}
+if __name__=="__main__": print(json.dumps(run(json.loads(sys.stdin.read() or "{}"),True),ensure_ascii=False,indent=2))
