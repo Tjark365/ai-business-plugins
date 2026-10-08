@@ -37,3 +37,9 @@ jobs:
       - name: Run plugin tests
         working-directory: ${{ matrix.plugin }}
         run: python -m unittest discover -p 'test_*.py' -v
+      - name: Package plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.plugin }}
+          path: ${{ matrix.plugin }}
+          if-no-files-found: error
