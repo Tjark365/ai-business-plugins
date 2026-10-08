@@ -2,29 +2,40 @@
 
 Find high-value B2B prospects using current public information.
 
+## Repository implementation
+
+- `lead_finder.py` — core ranking, scoring and Free/Pro output logic.
+- `plugin-spec.md` — product contract and required behavior.
+- `test_lead_finder.py` — unit tests.
+
 ## Free
-- Education/preview mode
-- Maximum 3 example leads or a lightweight shortlist
-- No claim of full-scale prospecting access
+- Preview mode
+- Maximum 3 leads
+- Lightweight fields only
 
 ## Pro
-- Full prospect research workflow
-- ICP, geography, industry and company-size filters
-- Ranked lead list
-- Buying-signal analysis
-- Lead scoring from 0–100
-- Evidence and sources
-- Next-action recommendations
+- Full ranked research output
+- Buying signals
+- Ability-to-pay assessment
+- Evidence and source tracking
+- Next actions
+- Score from 0–100
 
 Target price: €49/month.
 
-### Scoring
-- ICP fit: 30
-- Buying signal: 25
-- Ability to pay: 15
-- Problem/offer fit: 15
-- Timing: 10
-- Evidence: 5
+### Score
 
-The plugin must never invent contacts, buying intent, revenue or private personal data.
-Every material current claim should have a source.
+| Factor | Weight |
+|---|---:|
+| ICP fit | 30 |
+| Buying signal | 25 |
+| Ability to pay | 15 |
+| Problem/offer fit | 15 |
+| Timing | 10 |
+| Evidence | 5 |
+
+### Important
+
+This module does not perform web search by itself. The host must inject a search provider that returns current, sourced evidence.
+
+Never invent contacts, buying intent, revenue, or private personal data.
