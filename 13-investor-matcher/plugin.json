@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "13-investor-matcher",
+  "version": "0.1.0",
+  "description": "Investor Matcher plugin",
+  "author": {
+    "name": "Tjark365"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Investor Matcher",
+        "shortDescription": "Investor Matcher",
+        "longDescription": "Structured workflow with Free preview and Pro workflow.",
+        "developerName": "Tjark365",
+        "category": "Business",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": [
+          "Help me use this workflow.",
+          "Run a preview.",
+          "Review my inputs and next steps."
+        ]
+      }
+    }
+  }
+}
