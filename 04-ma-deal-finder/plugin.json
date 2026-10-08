@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "04-ma-deal-finder",
+  "version": "0.1.0",
+  "description": "M&A Deal Finder plugin",
+  "author": {
+    "name": "Tjark365"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "M&A Deal Finder",
+        "shortDescription": "M&A Deal Finder",
+        "longDescription": "Structured workflow with Free preview and Pro workflow.",
+        "developerName": "Tjark365",
+        "category": "Business",
+        "capabilities": [
+          "Interactive"
+        ],
+        "defaultPrompt": [
+          "Help me use this workflow.",
+          "Run a preview.",
+          "Review my inputs and next steps."
+        ]
+      }
+    }
+  }
+}
