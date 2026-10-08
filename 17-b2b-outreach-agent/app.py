@@ -1,15 +1,13 @@
-"""B2B Outreach Agent — production-ready core.
-Generate personalized evidence-based outreach sequences without spam.
-Free returns a preview; Pro returns the full structured workflow when host entitlement is supplied."""
-import json,sys,re
-
-def run(request,pro=False):
-    if not pro:
-        return {"mode":"free","preview":[{"title":"B2B Outreach Agent","summary":"Generate personalized evidence-based outreach sequences without spam.","score":50,"confidence":"low"}],"pro_required":True}
-    text=json.dumps(request,ensure_ascii=False)
-    terms=re.findall(r"[A-Za-zÄÖÜäöüß0-9-]{4,}",text)
-    score=min(100,40+len(set(x.lower() for x in terms[:20]))*3)
-    return {"mode":"pro","tool":"B2B Outreach Agent","result":{"summary":"Generate personalized evidence-based outreach sequences without spam.","score":score,"assumptions":list(request.keys()),"verified_facts":[],"inferences":[],"sources":[]}}
-if __name__=="__main__":
-    req=json.loads(sys.stdin.read() or "{}")
-    print(json.dumps(run(req,pro=True),ensure_ascii=False,indent=2))
+import json,sys
+NAME="B2B Outreach Agent"
+def run(r,pro=False):
+ if not isinstance(r,dict): raise ValueError("request must be an object")
+ if not pro:return {"mode":"free","tool":NAME,"preview":{"message":"Provide offer, prospect evidence and desired CTA for a personalized sequence."},"pro_required":True}
+ prospects=r.get("prospects",[])
+ out=[]
+ for p in prospects if isinstance(prospects,list) else []:
+  if not isinstance(p,dict): continue
+  evidence=p.get("evidence") or p.get("signal") or "No verified signal supplied"
+  out.append({"company":p.get("company","Unknown"),"evidence":evidence,"message_framework":["Relevant observed signal","Specific problem hypothesis","Credible proof/value","Low-friction CTA"],"cta":r.get("cta","15-minute fit check")})
+ return {"mode":"pro","tool":NAME,"result":{"personalized_frameworks":out,"guardrails":["Do not invent facts","Respect opt-outs and applicable marketing rules","Keep volume controlled and relevant"],"next_actions":["Verify every personalization fact","Send only to appropriate business contacts","Measure positive replies and meetings, not raw volume"]}}
+if __name__=="__main__": print(json.dumps(run(json.loads(sys.stdin.read() or "{}"),True),ensure_ascii=False))
